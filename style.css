@@ -52,3 +52,15 @@ header{
     display: flex;
     flex-wrap: wrap;
 }
+
+.container_img_type{
+    display: flex;
+    flex-direction: row;
+}
+
+#container_types{
+    display: flex;
+    flex-direction: column;
+    
+}
+

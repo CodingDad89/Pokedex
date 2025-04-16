@@ -12,29 +12,36 @@ function init() {
 
 
 async function fetchDataPokemon() {
-    for (let i = 1; i <= 20; i++){
+    for (let i = 1; i <= 3; i++){
         let response = await fetch(`${pokeUrl}/${i}`);
         pokemonDb = await response.json();
-        let mainContent = document.getElementById('content');
-        mainContent.innerHTML += renderPokecards(i);  
     }
+    renderPokecards();
 }
 
 
-function renderPokecards(i) {
-    return  `<div class="pokecard">
-    <div class="pokeball" id="pokemon_id${i}">
-        <img src="img/pokeball.png" id="pokeball_img">
-        <p>#</p>
-         ${pokemonDb.species.name}
-    </div>
+function renderPokecards() {
+    for (let i = 0; i < pokemonDb.length; i++) {
+
+        let mainContent = document.getElementById('content');
+        mainContent.innerHTML += 
+       `<div class="pokecard">
+        <div class="pokeball" id="pokemon_id${i+1}">
+            <img src="img/pokeball.png" id="pokeball_img">
+            <p>#</p>
+             ${pokemonDb.species.name}
+        </div>
+        <div class="container_img_type">
+            <div id="container_types">
+            </div>
+             <div id="container_img">
+            </div>
+        </div>
         <div>
-    
-    </div>
-    <div>
-        
-    </div>
-</div>`
+            
+        </div>
+    </div>`
+    }
 }
 
 function toggleOverlay(i){
