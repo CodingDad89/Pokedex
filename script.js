@@ -4,24 +4,27 @@ let pokeUrl = `https://pokeapi.co/api/v2/pokemon`;
 let pokemonDb = "";
 let pokemonAbilities = "";
 let pokemonStats = "";
-let pokemonInfosDb = "";
+let pokemonNameDb = [];
+let pokemonAbilitiesDb = [];
 
-function init() {
-    fetchDataPokemon();
-}
-
-
-async function fetchDataPokemon() {
-    for (let i = 1; i <= 3; i++){
-        let response = await fetch(`${pokeUrl}/${i}`);
-        pokemonDb = await response.json();
-    }
+async function init() {
+    await fetchDataPokemon();
     renderPokecards();
 }
 
 
-function renderPokecards() {
-    for (let i = 0; i < pokemonDb.length; i++) {
+async function fetchDataPokemon(j) {
+    for (let i = 0; i <= 20; i++){
+        let response = await fetch(`${pokeUrl}/${i+1}`);
+        pokemonDb = await response.json();
+        pokemonNameDb.push(pokemonDb.species.name);
+
+    }
+}
+
+
+function renderPokecards(j) {
+    for (let i = 0; i < limit; i++) {
 
         let mainContent = document.getElementById('content');
         mainContent.innerHTML += 
@@ -29,7 +32,7 @@ function renderPokecards() {
         <div class="pokeball" id="pokemon_id${i+1}">
             <img src="img/pokeball.png" id="pokeball_img">
             <p>#</p>
-             ${pokemonDb.species.name}
+             ${pokemonNameDb[i]}
         </div>
         <div class="container_img_type">
             <div id="container_types">
@@ -37,7 +40,8 @@ function renderPokecards() {
              <div id="container_img">
             </div>
         </div>
-        <div>
+        <div id="container_ablities">
+            ${pokemonAbilitiesDb}
             
         </div>
     </div>`
