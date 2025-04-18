@@ -3,11 +3,11 @@ let limit2 = 40;
 let offset = 0;
 let pokeUrl = `https://pokeapi.co/api/v2/pokemon`;
 let pokemonDb = "";
-let pokemonAbilities = "";
+let pokemonDbTypes = [];
 let pokemonIdDb = [];
 let pokemonNameDb = [];
-let pokemonAbilitiesDb = [];
 let pokemonHeightDb = [];
+let pokemonWeightDb = [];
 
 async function init() {
     await fetchDataPokemon();
@@ -27,6 +27,16 @@ async function fetchDataPokemon() {
         pokemonNameDb.push(pokemonDb.species.name);
         pokemonHeightDb.push(pokemonDb.height);
         pokemonIdDb.push(pokemonDb.id);
+        pokemonWeightDb.push(pokemonDb.weight);
+        pokemonDbTypes.push(pokemonDb.types)
+    }
+}
+
+async function fetchDataPokemonTypes() {
+    for (let i = 0; i <  pokemonDbTypes.types.length; i++){
+       let containerTypes = document.getElementById('container_types');
+       containerTypes.innerHTML += pokemonDbTypes.types.name;
+        
     }
 }
 
@@ -37,17 +47,16 @@ async function fetchDataSecondPokemon() {
         pokemonNameDb.push(pokemonDb.species.name);
         pokemonHeightDb.push(pokemonDb.height);
         pokemonIdDb.push(pokemonDb.id);
+        pokemonWeightDb.push(pokemonDb.weight)
     }
 }
-
-
 
 function renderPokecards(i) {
     for (let i = 0; i < limit; i++) {
 
         let mainContent = document.getElementById('content');
         mainContent.innerHTML += 
-       `<div class="pokecard" onclick="${toggleOverlay(i)}">
+       `<div class="pokecard" >
         <div class="pokeball" id="pokemon_id${i+1}">
             <p>#${pokemonIdDb[i]}</p>
              ${pokemonNameDb[i].charAt(0).toUpperCase()}${pokemonNameDb[i].slice(1)}
@@ -57,10 +66,6 @@ function renderPokecards(i) {
             </div>
              <div id="container_img">
             </div>
-        </div>
-        <div id="container_ablities">
-           
-            
         </div>
     </div>`
     }
@@ -82,4 +87,22 @@ function onclickPokemonDialog(i) {
 
                 <div id="dialogBox" onclick="dialogStopClosing(event)">
                 </div> `
+}
+
+function buttonLeft(i) {
+    if (i>=1) {
+    onclickPicDialog(i-1); 
+    }
+    else {
+        onclickPicDialog(i)
+    }
+}
+
+function buttonRight(i) {
+    if (i <= picArray.length-2) {
+        onclickPicDialog(i+1); 
+        }
+        else {
+            onclickPicDialog(i)
+        }
 }
