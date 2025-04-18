@@ -24,9 +24,7 @@ header{
     height: 250px;
     box-shadow:   8px 8px 16px #c5c5c5,
     -8px -8px 16px #ffffff;
-    background: linear-gradient(to right, #ff0000, #ffffff);
     padding: 20px;
-    color: #fff;
     border-radius: 50px 50px;
     margin: 20px;
     transition: transform 0.3s ease;
@@ -39,6 +37,7 @@ header{
 
 .pokeball {
     display: flex;
+    justify-content: space-between;
     align-items: center;
     gap: 20px;
 }
