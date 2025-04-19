@@ -12,6 +12,8 @@ let pokemonWeightDb = [];
 async function init() {
     await fetchDataPokemon();
     renderPokecards();
+    await fetchDataPokemonTypes();
+    renderPokecardsTypes(i);
 }
 
 async function onclickButtonLoadNew() {
@@ -21,7 +23,7 @@ async function onclickButtonLoadNew() {
 
 
 async function fetchDataPokemon() {
-    for (let i = 0; i <= 20; i++){
+    for (let i = 0; i <= limit; i++){
         let response = await fetch(`${pokeUrl}/${i+1}`);
         pokemonDb = await response.json();
         pokemonNameDb.push(pokemonDb.species.name);
@@ -33,11 +35,18 @@ async function fetchDataPokemon() {
 }
 
 async function fetchDataPokemonTypes() {
-    for (let i = 0; i <  pokemonDbTypes.types.length; i++){
-       let containerTypes = document.getElementById('container_types');
-       containerTypes.innerHTML += pokemonDbTypes.types.name;
-        
+    for (let i = 0; i <  pokemonNameDb.length; i++){
+
+       for (let j = 0; j < pokemonDbTypes[i].length; j++) {
+        let containerTypes = document.getElementById(`container_types${i}`);
+        containerTypes.innerHTML += 
+        `<div id="first_type">
+            ${pokemonDbTypes[i][j].type.name}<br>
+        </div>
+       
+        `
     }
+}
 }
 
 async function fetchDataSecondPokemon() {
@@ -56,15 +65,28 @@ function renderPokecards(i) {
 
         let mainContent = document.getElementById('content');
         mainContent.innerHTML += 
-       `<div class="pokecard" >
+       `<div class="pokecard" onclick="toggleOverlay(${i})" >
         <div class="pokeball" id="pokemon_id${i+1}">
             <p>#${pokemonIdDb[i]}</p>
              ${pokemonNameDb[i].charAt(0).toUpperCase()}${pokemonNameDb[i].slice(1)}
         </div>
         <div class="container_img_type">
-            <div id="container_types">
+            <div id="container_types${i}">
             </div>
              <div id="container_img">
+            </div>
+        </div>
+    </div>`
+    }
+}
+
+function renderPokecardsTypes(i) {
+    for (let i = 0; i < pokemonDbTypes.length; i++) {
+
+        let mainContent = document.getElementById('container_types');
+        mainContent.innerHTML += 
+       `<div id="types${i}">
+            ${pokemonDbTypes.types.name}
             </div>
         </div>
     </div>`
@@ -86,6 +108,18 @@ function onclickPokemonDialog(i) {
         document.getElementById(`overlay`). innerHTML = `
 
                 <div id="dialogBox" onclick="dialogStopClosing(event)">
+                    <div class="pokecard" onclick="toggleOverlay(${i})" >
+                    <div class="pokeball" id="pokemon_id${i+1}">
+                        <p>#${pokemonIdDb[i]}</p>
+                        ${pokemonNameDb[i].charAt(0).toUpperCase()}${pokemonNameDb[i].slice(1)}
+                    </div>
+                    <div class="container_img_type">
+                    <div id="container_types">
+                    </div>
+             <div id="container_img">
+            </div>
+        </div>
+    </div>
                 </div> `
 }
 
