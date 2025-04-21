@@ -1,6 +1,4 @@
 let limit = 20;
-let limit2 = 40;
-let offset = 0;
 let pokeUrl = `https://pokeapi.co/api/v2/pokemon`;
 let pokemonDb = "";
 let pokemonDbTypes = [];
@@ -9,10 +7,9 @@ let pokemonNameDb = [];
 let pokemonHeightDb = [];
 let pokemonWeightDb = [];
 let pokemonPicDb = [];
-let newLimit = "";
 
 async function init() {
-    await fetchDataPokemon();
+    await fetchDataPokemon(limit);
     renderPokecards();
     await renderPokemonTypes();
 }
@@ -25,49 +22,6 @@ async function onclickLoadMore(){
 
 async function fetchDataPokemon() {
     for (let i = 0; i <= limit; i++){
-        let response = await fetch(`${pokeUrl}/${i+1}`);
-        pokemonDb = await response.json();
-        pokemonNameDb.push(pokemonDb.species.name);
-        pokemonHeightDb.push(pokemonDb.height);
-        pokemonIdDb.push(pokemonDb.id);
-        pokemonWeightDb.push(pokemonDb.weight);
-        pokemonDbTypes.push(pokemonDb.types)
-        pokemonPicDb.push(pokemonDb.sprites.front_default)
-    }
-}
-
-async function renderPokemonTypes() {
-    for (let i = 0; i <  pokemonNameDb.length; i++){
-
-       for (let j = 0; j < pokemonDbTypes[i].length; j++) {
-        let containerTypes = document.getElementById(`container_types${i}`);
-        containerTypes.innerHTML += 
-        `<div id="type" class="${pokemonDbTypes[i][j].type.name}">
-            ${pokemonDbTypes[i][j].type.name}<br>
-        </div>
-        `
-    }
-}
-}
-
-async function renderSecondPokemonTypes() {
- 
-    for (let i = limit+1; i < pokemonNameDb.length; i++){
-
-       for (let j = 0; j < pokemonDbTypes[i].length; j++) {
-        let containerTypes = document.getElementById(`container_types${i}`);
-        containerTypes.innerHTML += 
-        `<div id="type" >
-            ${pokemonDbTypes[i][j].type.name}<br>
-        </div>
-        `
-    }
-}
-}
-
-async function fetchDataSecondPokemon() {
-    newLimit = limit +20;
-    for (let i = limit+1; i <= newLimit; i++){
         let response = await fetch(`${pokeUrl}/${i+1}`);
         pokemonDb = await response.json();
         pokemonNameDb.push(pokemonDb.species.name);
@@ -100,8 +54,36 @@ function renderPokecards(i) {
     }
 }
 
+async function renderPokemonTypes() {
+    for (let i = 0; i <  pokemonNameDb.length; i++){
+
+       for (let j = 0; j < pokemonDbTypes[i].length; j++) {
+        let containerTypes = document.getElementById(`container_types${i}`);
+        containerTypes.innerHTML += 
+        `<div id="type" class="${pokemonDbTypes[i][j].type.name}">
+            ${pokemonDbTypes[i][j].type.name}<br>
+        </div>
+        `
+    }
+}
+}
+
+async function fetchDataSecondPokemon() {
+
+    for (let i = 20+1; i <= 40+1; i++){
+        let response = await fetch(`${pokeUrl}/${i+1}`);
+        pokemonDb = await response.json();
+        pokemonNameDb.push(pokemonDb.species.name);
+        pokemonHeightDb.push(pokemonDb.height);
+        pokemonIdDb.push(pokemonDb.id);
+        pokemonWeightDb.push(pokemonDb.weight);
+        pokemonDbTypes.push(pokemonDb.types)
+        pokemonPicDb.push(pokemonDb.sprites.front_default)
+    }
+}
+
 function renderPokecardsLoadMore(i) {
-    for (let i = limit+1; i <= newLimit; i++) {
+    for (let i = 20+1; i <= 40+1; i++) {
 
         let mainContent = document.getElementById('content');
         mainContent.innerHTML += 
@@ -121,12 +103,32 @@ function renderPokecardsLoadMore(i) {
     }
 }
 
+async function renderSecondPokemonTypes() {
+    for (let i = 20+1; i < 40+2; i++){
+
+       for (let j = 0; j < pokemonDbTypes[i].length; j++) {
+        let containerTypes = document.getElementById(`container_types${i}`);
+        containerTypes.innerHTML += 
+        `<div id="type" >
+            ${pokemonDbTypes[i][j].type.name}<br>
+        </div>
+        `
+    }
+}
+}
 
 function toggleOverlay(i){
 
     let overlayRef = document.getElementById(`overlay`);
     overlayRef.classList.toggle(`d_none`);
     onclickPokemonDialog(i);
+}
+
+function closeOverlay(){
+
+    let overlayRef = document.getElementById(`overlay`);
+    overlayRef.classList.toggle(`d_none`);
+  
 }
 
 function dialogStopClosing(event) {
@@ -149,12 +151,16 @@ function onclickPokemonDialog(i) {
             Height = ${pokemonHeightDb[i]} m
 
         </div>
+        <div id="buttonsPfeile">
+            <button id="buttonLeft" onclick="buttonLeft(${i})"></button>
+            <button id="buttonRight" onclick="buttonRight(${i})"></button>
+        </div>
     </div>`
 }
 
 function buttonLeft(i) {
     if (i>=1) {
-    onclickPicDialog(i-1); 
+        onclickPokemonDialog(i-1) ; 
     }
     else {
         onclickPicDialog(i)
@@ -162,8 +168,8 @@ function buttonLeft(i) {
 }
 
 function buttonRight(i) {
-    if (i <= picArray.length-2) {
-        onclickPicDialog(i+1); 
+    if (i <= pokemonNameDb.length) {
+        onclickPokemonDialog(i+1) ; 
         }
         else {
             onclickPicDialog(i)
