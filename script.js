@@ -1,4 +1,4 @@
-let limit = 2;
+let limit = 20;
 let limit2 = 40;
 let offset = 0;
 let pokeUrl = `https://pokeapi.co/api/v2/pokemon`;
@@ -9,7 +9,7 @@ let pokemonNameDb = [];
 let pokemonHeightDb = [];
 let pokemonWeightDb = [];
 let pokemonPicDb = [];
-let newLimit = limit + 20;
+let newLimit = "";
 
 async function init() {
     await fetchDataPokemon();
@@ -17,11 +17,11 @@ async function init() {
     await renderPokemonTypes();
 }
 
-async function onclickButtonLoadNew() {
+async function onclickLoadMore(){
     await fetchDataSecondPokemon();
-    renderPokecards();
+    renderPokecardsLoadMore();
+    renderSecondPokemonTypes();
 }
-
 
 async function fetchDataPokemon() {
     for (let i = 0; i <= limit; i++){
@@ -42,7 +42,22 @@ async function renderPokemonTypes() {
        for (let j = 0; j < pokemonDbTypes[i].length; j++) {
         let containerTypes = document.getElementById(`container_types${i}`);
         containerTypes.innerHTML += 
-        `<div id="first_type">
+        `<div id="type" class="${pokemonDbTypes[i][j].type.name}">
+            ${pokemonDbTypes[i][j].type.name}<br>
+        </div>
+        `
+    }
+}
+}
+
+async function renderSecondPokemonTypes() {
+ 
+    for (let i = limit+1; i < pokemonNameDb.length; i++){
+
+       for (let j = 0; j < pokemonDbTypes[i].length; j++) {
+        let containerTypes = document.getElementById(`container_types${i}`);
+        containerTypes.innerHTML += 
+        `<div id="type" >
             ${pokemonDbTypes[i][j].type.name}<br>
         </div>
         `
@@ -51,19 +66,42 @@ async function renderPokemonTypes() {
 }
 
 async function fetchDataSecondPokemon() {
-    for (let i = 20; i <= 40; i++){
+    newLimit = limit +20;
+    for (let i = limit+1; i <= newLimit; i++){
         let response = await fetch(`${pokeUrl}/${i+1}`);
         pokemonDb = await response.json();
         pokemonNameDb.push(pokemonDb.species.name);
         pokemonHeightDb.push(pokemonDb.height);
         pokemonIdDb.push(pokemonDb.id);
-        pokemonWeightDb.push(pokemonDb.weight)
+        pokemonWeightDb.push(pokemonDb.weight);
+        pokemonDbTypes.push(pokemonDb.types)
         pokemonPicDb.push(pokemonDb.sprites.front_default)
     }
 }
 
 function renderPokecards(i) {
     for (let i = 0; i <= limit; i++) {
+
+        let mainContent = document.getElementById('content');
+        mainContent.innerHTML += 
+       `<div class="pokecard ${pokemonDb.types.name}" onclick="toggleOverlay(${i})" >
+        <div class="pokeball" id="pokemon_id${i+1}">
+            <p>#${pokemonIdDb[i]}</p>
+             ${pokemonNameDb[i].charAt(0).toUpperCase()}${pokemonNameDb[i].slice(1)}
+        </div>
+        <div class="container_img_type">
+            <div id="container_types${i}">
+            </div>
+             <div id="container_img">
+             <img src="${pokemonPicDb[i]}">
+            </div>
+        </div>
+    </div>`
+    }
+}
+
+function renderPokecardsLoadMore(i) {
+    for (let i = limit+1; i <= newLimit; i++) {
 
         let mainContent = document.getElementById('content');
         mainContent.innerHTML += 
@@ -96,23 +134,22 @@ function dialogStopClosing(event) {
 }
 
 function onclickPokemonDialog(i) {
-        document.getElementById(`overlay`). innerHTML = `
-
-                <div id="dialogBox" onclick="dialogStopClosing(event)">
-                    <div class="pokecard" onclick="toggleOverlay(${i})" >
-                    <div class="pokeball" id="pokemon_id${i+1}">
-                        <p>#${pokemonIdDb[i]}</p>
-                        ${pokemonNameDb[i].charAt(0).toUpperCase()}${pokemonNameDb[i].slice(1)}
-                    </div>
-                    <div class="container_img_type">
-                    <div id="container_types">
-                    </div>
+        document.getElementById(`overlay`). innerHTML =        
+        `<div class="pokecardOnClick" onclick="toggleOverlay(${i})" >
+        <div class="pokeball" id="pokemon_id${i+1}">
+             ${pokemonNameDb[i].charAt(0).toUpperCase()}${pokemonNameDb[i].slice(1)}
+        </div>
+        <div class="container_img_type">
              <div id="container_img">
-             ${pokemonPicDb[i]}
+             <img src="${pokemonPicDb[i]}">
             </div>
         </div>
-    </div>
-                </div> `
+        <div class="pokemon_stats">
+            Weight = ${pokemonWeightDb[i]} kg <br>
+            Height = ${pokemonHeightDb[i]} m
+
+        </div>
+    </div>`
 }
 
 function buttonLeft(i) {
