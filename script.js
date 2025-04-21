@@ -43,7 +43,6 @@ async function fetchDataPokemonTypes() {
         `<div id="first_type">
             ${pokemonDbTypes[i][j].type.name}<br>
         </div>
-       
         `
     }
 }
@@ -65,7 +64,7 @@ function renderPokecards(i) {
 
         let mainContent = document.getElementById('content');
         mainContent.innerHTML += 
-       `<div class="pokecard" onclick="toggleOverlay(${i})" >
+       `<div class="pokecard ${pokemonDb.types.name}" onclick="toggleOverlay(${i})" >
         <div class="pokeball" id="pokemon_id${i+1}">
             <p>#${pokemonIdDb[i]}</p>
              ${pokemonNameDb[i].charAt(0).toUpperCase()}${pokemonNameDb[i].slice(1)}
@@ -81,11 +80,11 @@ function renderPokecards(i) {
 }
 
 function renderPokecardsTypes(i) {
-    for (let i = 0; i < pokemonDbTypes.length; i++) {
+    for (let i = 0; i < pokemonDbTypes.length -1; i++) {
 
-        let mainContent = document.getElementById('container_types');
+        let mainContent = document.getElementById(`container_types${i}`);
         mainContent.innerHTML += 
-       `<div id="types${i}">
+       `<div id="types${i}" class="types">
             ${pokemonDbTypes.types.name}
             </div>
         </div>
