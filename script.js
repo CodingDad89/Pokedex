@@ -1,4 +1,4 @@
-let limit = 20;
+let limit = 2;
 let limit2 = 40;
 let offset = 0;
 let pokeUrl = `https://pokeapi.co/api/v2/pokemon`;
@@ -8,12 +8,13 @@ let pokemonIdDb = [];
 let pokemonNameDb = [];
 let pokemonHeightDb = [];
 let pokemonWeightDb = [];
+let pokemonPicDb = [];
+let newLimit = limit + 20;
 
 async function init() {
     await fetchDataPokemon();
     renderPokecards();
-    await fetchDataPokemonTypes();
-    renderPokecardsTypes(i);
+    await renderPokemonTypes();
 }
 
 async function onclickButtonLoadNew() {
@@ -31,10 +32,11 @@ async function fetchDataPokemon() {
         pokemonIdDb.push(pokemonDb.id);
         pokemonWeightDb.push(pokemonDb.weight);
         pokemonDbTypes.push(pokemonDb.types)
+        pokemonPicDb.push(pokemonDb.sprites.front_default)
     }
 }
 
-async function fetchDataPokemonTypes() {
+async function renderPokemonTypes() {
     for (let i = 0; i <  pokemonNameDb.length; i++){
 
        for (let j = 0; j < pokemonDbTypes[i].length; j++) {
@@ -56,11 +58,12 @@ async function fetchDataSecondPokemon() {
         pokemonHeightDb.push(pokemonDb.height);
         pokemonIdDb.push(pokemonDb.id);
         pokemonWeightDb.push(pokemonDb.weight)
+        pokemonPicDb.push(pokemonDb.sprites.front_default)
     }
 }
 
 function renderPokecards(i) {
-    for (let i = 0; i < limit; i++) {
+    for (let i = 0; i <= limit; i++) {
 
         let mainContent = document.getElementById('content');
         mainContent.innerHTML += 
@@ -73,24 +76,13 @@ function renderPokecards(i) {
             <div id="container_types${i}">
             </div>
              <div id="container_img">
+             <img src="${pokemonPicDb[i]}">
             </div>
         </div>
     </div>`
     }
 }
 
-function renderPokecardsTypes(i) {
-    for (let i = 0; i < pokemonDbTypes.length -1; i++) {
-
-        let mainContent = document.getElementById(`container_types${i}`);
-        mainContent.innerHTML += 
-       `<div id="types${i}" class="types">
-            ${pokemonDbTypes.types.name}
-            </div>
-        </div>
-    </div>`
-    }
-}
 
 function toggleOverlay(i){
 
@@ -116,6 +108,7 @@ function onclickPokemonDialog(i) {
                     <div id="container_types">
                     </div>
              <div id="container_img">
+             ${pokemonPicDb[i]}
             </div>
         </div>
     </div>
